@@ -101,8 +101,8 @@ or Active Directory.
 
 =head2 basic_auth
 
-Configure specific auth method (see OPTIONS).  Returns 1 on success, 0 on
-failure.
+Configure specific auth method (see CONFIGURATION).  Returns 1 on success,
+0 on failure.
 
 =head1 CONFIGURATION
 
