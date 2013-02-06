@@ -6,7 +6,7 @@ use Mojo::ByteStream 'b';
 # Make sure sockets are working
 plan skip_all => 'working sockets required for this test!'
   unless Mojo::IOLoop->new->generate_port;    # Test server
-plan tests => 57;
+plan tests => 54;
 
 # Lite app
 use Mojolicious::Lite;
@@ -104,21 +104,6 @@ get '/passwd-file' => sub {
         if $self->basic_auth(
             realm => {
                 path => 'test.passwd'
-            }
-        );
-
-    $self->render_text('denied');
-};
-
-# Realm name with whitespace
-get '/realm-name-with-whitespace' => sub {
-    my $self = shift;
-
-    return $self->render_text( 'authorized' )
-        if $self->basic_auth(
-            "Realm Name" => {
-                username => 'username',
-                password => 'password'
             }
         );
 
@@ -234,12 +219,5 @@ diag '/passwd-file';
 $encoded = b("username:password")->b64_encode->to_string;
 chop $encoded;
 $t->get_ok('/passwd-file', {Authorization => "Basic $encoded"})
-  ->status_is(200)->content_is('authorized');
-
-# Realm name with whitespace
-diag '/realm-name-with-whitespace';
-$encoded = b('username:password')->b64_encode->to_string;
-chop $encoded;
-$t->get_ok('/realm-name-with-whitespace', {Authorization => "Basic $encoded"})
   ->status_is(200)->content_is('authorized');
 

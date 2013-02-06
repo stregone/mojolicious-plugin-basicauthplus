@@ -2,7 +2,7 @@ NAME
     Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 VERSION
-    version 0.02
+    Version 0.03
 
 DESCRIPTION
     Mojolicious::Plugin::BasicAuthPlus is a helper for basic HTTP
@@ -41,9 +41,11 @@ You can also look for information at:
         http://search.cpan.org/dist/Mojolicious-Plugin-BasicAuthPlus/
 
 
-LICENSE AND COPYRIGHT
+LICENSE
 
 Copyright (C) 2013 Brad Robertson
+
+COPYRIGHT
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

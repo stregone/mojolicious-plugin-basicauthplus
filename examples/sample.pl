@@ -4,7 +4,7 @@ use Mojolicious::Lite;
 
 plugin 'basic_auth_plus';
 
-# Use inline callback, requiring user ID 'foo' and password 'bar'
+# Use a callback requiring user ID 'foo' and password 'bar'
 get '/callback' => sub {
     my $self = shift;
 
