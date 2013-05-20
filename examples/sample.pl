@@ -8,7 +8,7 @@ plugin 'basic_auth_plus';
 get '/callback' => sub {
     my $self = shift;
 
-    $self->render_text('ok')
+    $self->render(text => 'ok')
         if $self->basic_auth(
         "Callback Test" => sub { return 1 if "@_" eq 'foo bar' } );
 };
@@ -43,7 +43,7 @@ get '/crypt' => sub {
 get '/ldap' => sub {
     my $self = shift;
 
-    $self->render_text('ok')
+    $self->render(text => 'ok')
         if $self->basic_auth(
             "Some Realm" => {
                 host   => 'ldap.company.com',
@@ -56,7 +56,7 @@ get '/ldap' => sub {
 get '/activedirectory' => sub {
     my $self = shift;
 
-    $self->render_text('ok')
+    $self->render(text => 'ok')
         if $self->basic_auth(
             "Another Realm" => {
                 host   => 'ldap.company.com',

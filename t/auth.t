@@ -19,11 +19,11 @@ plugin 'basic_auth_plus';
 get '/user-pass' => sub {
     my $self = shift;
 
-    #return $self->render_text('denied')
+    #return $self->render(text => 'denied')
     return $self->render(text => 'authorized')
       if $self->basic_auth(realm => username => 'password');
 
-    $self->render_text('denied');
+    $self->render(text => 'denied');
 };
 
 get '/user-pass-with-colon-password' => sub {
@@ -32,45 +32,45 @@ get '/user-pass-with-colon-password' => sub {
     return $self->render(text => 'authorized')
       if $self->basic_auth(realm => username => 'pass:word');
 
-    $self->render_text('denied');
+    $self->render(text => 'denied');
 };
 
 get '/pass' => sub {
     my $self = shift;
 
-    return $self->render_text('denied')
+    return $self->render(text => 'denied')
       unless $self->basic_auth(realm => 'password');
 
-    $self->render_text('authorized');
+    $self->render(text => 'authorized');
 };
 
 # Entered user/pass supplied to callback
 get '/get-auth-callback' => sub {
     my $self = shift;
 
-    return $self->render_text('authorized')
+    return $self->render(text => 'authorized')
       if $self->basic_auth(
         realm => sub { return "@_" eq 'username password' });
 
-    $self->render_text('denied');
+    $self->render(text => 'denied');
 };
 
 # Callback with colon in password
 get '/get-auth-callback-with-colon-password' => sub {
     my $self = shift;
 
-    return $self->render_text('authorized')
+    return $self->render(text => 'authorized')
       if $self->basic_auth(
         realm => sub { return "@_" eq 'username pass:word' });
 
-    return $self->render_text('denied');
+    return $self->render(text => 'denied');
 };
 
 # Explicit username and password
 get '/get-auth-with-explicit-creds' => sub {
     my $self = shift;
 
-    return $self->render_text('authorized')
+    return $self->render(text => 'authorized')
         if $self->basic_auth(
             realm => {
                 username => 'username',
@@ -78,14 +78,14 @@ get '/get-auth-with-explicit-creds' => sub {
             }
         );
 
-    $self->render_text('denied');
+    $self->render(text => 'denied');
 };
 
 # Explicit username and encrypted password string
 get '/get-auth-with-encrypted-pass' => sub {
     my $self = shift;
 
-    return $self->render_text( 'authorized' )
+    return $self->render(text => 'authorized')
         if $self->basic_auth(
             realm => {
                 username => 'username',
@@ -93,21 +93,21 @@ get '/get-auth-with-encrypted-pass' => sub {
             }
         );
 
-    $self->render_text('denied');
+    $self->render(text => 'denied');
 };
 
 # Passwd file authentication
 get '/passwd-file' => sub {
     my $self = shift;
 
-    return $self->render_text( 'authorized' )
+    return $self->render(text => 'authorized')
         if $self->basic_auth(
             realm => {
                 path => 'test.passwd'
             }
         );
 
-    $self->render_text('denied');
+    $self->render(text => 'denied');
 };
 
 under sub {

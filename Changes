@@ -1,5 +1,9 @@
 Revision history for Mojolicious-Plugin-BasicAuthPlus
 
+0.04 2013-05-20
+    - Replaced obsolete render_text() calls for compatibility with Mojolicious
+      4.0.
+
 0.03 2013-02-06
     - Reworked documentation, added an example script, made some small
       changes to make CPANTS happier

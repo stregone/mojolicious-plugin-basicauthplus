@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Authen::Simple::LDAP;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub register {
     my ( $plugin, $app ) = @_;
@@ -116,7 +116,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =head1 SYNOPSIS
 
@@ -126,7 +126,7 @@ Version 0.03
   get '/' => sub {
       my $self = shift;
   
-      $self->render_text('ok')
+      $self->render(text => 'ok')
         if $self->basic_auth(
           "Realm Name" => {
               username => 'username',
@@ -141,7 +141,7 @@ Version 0.03
   sub index {
       my $self = shift;
   
-      $self->render_text( 'ok' )
+      $self->render(text => 'ok')
           if $self->basic_auth(
               "My Realm" => {
                   path => '/path/to/some/passwd/file.txt'
@@ -233,7 +233,7 @@ The LDAP/ActiveDirectory filter to use when searching a directory.
   get '/' => sub {
       my $self = shift;
   
-      return $self->render_text('ok')
+      return $self->render(text => 'ok')
           if $self->basic_auth(
               realm => sub { return 1 if "@_" eq 'username password' }
           );
@@ -243,7 +243,7 @@ The LDAP/ActiveDirectory filter to use when searching a directory.
   get '/' => sub {
       my $self = shift;
   
-      $self->render_text('ok')
+      $self->render(text => 'ok')
         if $self->basic_auth(
           "Realm Name" => {
               username => 'username',
@@ -256,7 +256,7 @@ The LDAP/ActiveDirectory filter to use when searching a directory.
   get '/' => sub {
       my $self = shift;
   
-      $self->render_text('ok')
+      $self->render(text => 'ok')
         if $self->basic_auth(
           "Realm Name" => {
               path => '/path/to/passwd/file.txt'
@@ -268,7 +268,7 @@ The LDAP/ActiveDirectory filter to use when searching a directory.
   get '/' => sub {
       my $self = shift;
   
-      $self->render_text('ok')
+      $self->render(text => 'ok')
         if $self->basic_auth(
           "Realm Name" => {
               host   => 'ldap.company.com',
@@ -281,7 +281,7 @@ The LDAP/ActiveDirectory filter to use when searching a directory.
   get '/' => sub {
       my $self = shift;
   
-      $self->render_text('ok')
+      $self->render(text => 'ok')
         if $self->basic_auth(
           "Realm Name" => {
               host   => 'ldap.company.com',
