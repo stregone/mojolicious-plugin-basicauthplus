@@ -92,6 +92,7 @@ sub _check_ldap {
     my ( $self, $c, $auth, $params ) = @_;
     my ( $username, $password ) = _split_auth($auth);
 
+    return 0 unless defined $password;
     my $ldap = Authen::Simple::LDAP->new(%$params);
 
     return 1 if $ldap->authenticate( $username, $password );
