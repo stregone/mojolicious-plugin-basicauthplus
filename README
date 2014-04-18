@@ -2,7 +2,7 @@ NAME
     Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 VERSION
-    Version 0.04
+    Version 0.05
 
 DESCRIPTION
     Mojolicious::Plugin::BasicAuthPlus is a helper for basic HTTP
@@ -18,6 +18,25 @@ To install this module, run the following commands:
 	make
 	make test
 	make install
+
+TEST SUITE
+
+To run the LDAP authentication tests t/auth-ldap.t, set the following
+environmental variables as appropriate for your LDAP server:
+
+    bash:
+
+    MOJO_TEST_LDAP_HOST=ldap.someplace.com
+    MOJO_TEST_LDAP_BASEDN="dc=MYDOMAIN,dc=com"
+    MOJO_TEST_LDAP_USERPASS=user:pass
+
+    tcsh/csh:
+
+    setenv MOJO_TEST_LDAP_HOST ldap.someplace.com
+    setenv MOJO_TEST_LDAP_BASEDN "dc=MYDOMAIN,dc=com"
+    setenv MOJO_TEST_LDAP_USERPASS user:pass
+
+Now re-run 'make test'.
 
 SUPPORT AND DOCUMENTATION
 
@@ -41,11 +60,11 @@ You can also look for information at:
         http://search.cpan.org/dist/Mojolicious-Plugin-BasicAuthPlus/
 
 
-LICENSE
-
-Copyright (C) 2013 Brad Robertson
-
 COPYRIGHT
+
+Copyright (c) 2013-2014 by Brad Robertson
+
+LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
