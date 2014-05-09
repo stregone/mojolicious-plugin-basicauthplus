@@ -102,6 +102,9 @@ sub _check_passwd {
     my ( $self, $c, $auth, $params ) = @_;
     my ( $username, $password ) = _split_auth($auth);
 
+    $username = '' unless $username;
+    $password = '' unless $password;
+
     my $passwd = Authen::Simple::Passwd->new(%$params);
 
     return 1 if $passwd->authenticate( $username, $password );
