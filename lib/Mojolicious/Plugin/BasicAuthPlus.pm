@@ -76,7 +76,14 @@ sub _password_prompt {
     return;
 }
 
-sub _split_auth { return split ':', $_[0] }
+sub _split_auth {
+    my ( $username, $password ) = split ':', $_[0];
+
+    $username = '' unless defined $username;
+    $password = '' unless defined $password;
+
+    return ( $username, $password );
+}
 
 sub _check_simple {
     my ( $self, $c, $auth, $params ) = @_;
