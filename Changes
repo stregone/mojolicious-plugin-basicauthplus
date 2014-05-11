@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-BasicAuthPlus
 
+0.06 2014-05-11
+  - Fixed undefined parameters in _split_auth().
+
 0.05 2014-04-18
   - Deny auth for blank password w/LDAP (previously just dumped).
   - Added tests for LDAP authentication.

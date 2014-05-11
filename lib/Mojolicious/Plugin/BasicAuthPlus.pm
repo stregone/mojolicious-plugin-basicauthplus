@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Authen::Simple::LDAP;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub register {
     my ( $plugin, $app ) = @_;
@@ -124,7 +124,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =head1 SYNOPSIS
 
@@ -351,7 +351,15 @@ Brad Robertson <blr@cpan.org>
 
 =head1 CONTRIBUTORS
 
-Jay Mortensen <jay@purplewire.com>
+In alphabetical order:
+
+=over 2
+
+G.Y. Park
+
+Jay Mortensen
+
+=back
 
 =head1 SEE ALSO
 
