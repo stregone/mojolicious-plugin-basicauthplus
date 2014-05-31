@@ -2,7 +2,7 @@ NAME
     Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 VERSION
-    Version 0.05
+    Version 0.07
 
 DESCRIPTION
     Mojolicious::Plugin::BasicAuthPlus is a helper for basic HTTP

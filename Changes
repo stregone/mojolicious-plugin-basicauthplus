@@ -1,5 +1,9 @@
 Revision history for Mojolicious-Plugin-BasicAuthPlus
 
+0.07 2014-05-30
+  - Rework auth.t and auth-ldap.t since Mojo::IOLoop->generate_port has been
+    removed in Mojolicious 5.0.
+
 0.06 2014-05-11
   - Fixed undefined parameters in _split_auth().
 

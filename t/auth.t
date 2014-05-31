@@ -4,8 +4,10 @@ use Test::Mojo;
 use Mojo::ByteStream 'b';
 
 # Make sure sockets are working
+my $id = Mojo::IOLoop->server({address => '127.0.0.1'} => sub { });
 plan skip_all => 'working sockets required for this test!'
-  unless Mojo::IOLoop->new->generate_port;    # Test server
+    unless Mojo::IOLoop->acceptor($id)->handle->sockport;    # Test server
+
 plan tests => 54;
 
 # Lite app
