@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Authen::Simple::LDAP;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 sub register {
     my ( $plugin, $app ) = @_;
@@ -29,24 +29,31 @@ sub register {
                     and !$callback
                     and !$params;
 
+            # Hash to hold return data
+            my %data;
+            $data{username} = $username;
+
             # Verification within callback
-            return 1 if $callback and $callback->( split /:/, $auth, 2 );
+            return (\%data, 1)
+                if $callback and $callback->( split /:/, $auth, 2 );
 
             # Verified with realm => username => password syntax
-            return 1 if $auth eq ( $username || '' ) . ":$password";
+            return (\%data, 1)
+                if $auth eq ( $username || '' ) . ":$password";
 
             # Verified via simple, passwd file, LDAP, or Active Directory.
             if ($auth) {
                 if ( $params->{'username'} and $params->{'password'} ) {
-                    return 1
+                    return (\%data, 1)
                         if $plugin->_check_simple( $self, $auth, $params );
                 }
                 elsif ( $params->{'path'} ) {
-                    return 1
+                    return (\%data, 1)
                         if $plugin->_check_passwd( $self, $auth, $params );
                 }
                 elsif ( $params->{'host'} ) {
-                    return 1 if $plugin->_check_ldap( $self, $auth, $params );
+                    return (\%data, 1)
+                        if $plugin->_check_ldap( $self, $auth, $params );
                 }
             }
 
@@ -124,7 +131,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.07
+Version 0.08
 
 =head1 SYNOPSIS
 
@@ -177,8 +184,33 @@ Register condition in L<Mojolicious> application.
 
 =head2 C<basic_auth>
 
-Configure specific auth method (see CONFIGURATION).  Returns 1 on success,
-0 on failure.
+Configure specific auth method (see CONFIGURATION).  Returns a two-element
+list, where the first element is a hash reference and the second is an
+integer (1 for success, 0 for failure).
+
+In the future, the hash reference may contain additional values, but for now
+it contains just one key/value pair for the username used to authenticate.
+You can ignore this; thus, for example, both of the following are valid:
+
+  my ($hash_ref, $auth_ok)
+      = $self->basic_auth(
+          "My Realm" => {
+              username => 'zapp',
+              password => 'brannigan'
+          }
+      );
+  if ($auth_ok) {
+      $self->app->log->info("Auth success for $hash_ref->{username}");
+      render(text => 'ok');
+  }
+
+  $self->render(text => 'ok')
+      if ($self->basic_auth(
+          "My Realm" => {
+              username => 'zapp',
+              password => 'brannigan'
+          }
+      );
 
 =head1 CONFIGURATION
 
@@ -245,6 +277,30 @@ The LDAP/ActiveDirectory filter to use when searching a directory.
           if $self->basic_auth(
               realm => sub { return 1 if "@_" eq 'username password' }
           );
+  };
+  
+  # With callback and getting username from return hash ref.
+  get '/' => sub {
+      my $self = shift;
+  
+      my ($href, $auth_ok) = $self->basic_auth(
+          realm => sub { return 1 if "@_" eq 'username password' }
+      );
+
+      if ($auth_ok) {
+          return $self->render(
+              status => 200,
+              text   => 'ok',
+              msg    => "Welcome $href->{username}"
+          );
+      }
+      else {
+          return $self->render(
+              status => 401,
+              text   => 'unauthorized',
+              msg    => "Sorry $href->{username}"
+          );
+      }
   };
   
   # With encrypted password
@@ -368,7 +424,7 @@ L<Authen::Simple::Password>, L<Authen::Simple::LDAP>, L<Authen::Simple::Passwd>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2013-2014 by Brad Robertson.
+Copyright (c) 2013-2015 by Brad Robertson.
 
 =head1 LICENSE
 

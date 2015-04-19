@@ -1,5 +1,9 @@
 Revision history for Mojolicious-Plugin-BasicAuthPlus
 
+0.08 2015-04-19
+  - basic_auth() now returns a two-element list, including a hash ref and
+    success/failure code.
+
 0.07 2014-05-30
   - Rework auth.t and auth-ldap.t since Mojo::IOLoop->generate_port has been
     removed in Mojolicious 5.0.
