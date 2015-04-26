@@ -8,7 +8,7 @@ my $id = Mojo::IOLoop->server({address => '127.0.0.1'} => sub { });
 plan skip_all => 'working sockets required for this test!'
     unless Mojo::IOLoop->acceptor($id)->handle->sockport;    # Test server
 
-plan tests => 78;
+plan tests => 81;
 
 # Lite app
 use Mojolicious::Lite;
@@ -32,6 +32,18 @@ get '/user-pass-with-hash' => sub {
 
     my ($hash_ref, $auth_ok)
         = $self->basic_auth(realm => 'philip' => 'fry');
+    return $self->render(text => $hash_ref->{username})
+      if $auth_ok;
+
+    $self->render(text => 'denied');
+};
+
+get '/user-pass-with-hash-return' => sub {
+    my $self = shift;
+
+    my ($hash_ref, $auth_ok)
+        = $self->basic_auth(realm => {username => 'philip',
+                password => 'fry'});
     return $self->render(text => $hash_ref->{username})
       if $auth_ok;
 
@@ -274,6 +286,12 @@ diag '/user-pass-with-hash';
 $encoded = b("philip:fry")->b64_encode->to_string;
 chop $encoded;
 $t->get_ok('/user-pass-with-hash', {Authorization => "Basic $encoded"})->status_is(200)->content_is('philip');
+
+# Username, password, with return data hash.
+diag '/user-pass-with-hash-return';
+$encoded = b("philip:fry")->b64_encode->to_string;
+chop $encoded;
+$t->get_ok('/user-pass-with-hash-return', {Authorization => "Basic $encoded"})->status_is(200)->content_is('philip');
 
 # Username, password with colon in password
 diag '/user-pass-with-colon-password';
