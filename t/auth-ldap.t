@@ -8,7 +8,8 @@ my $id = Mojo::IOLoop->server({address => '127.0.0.1'} => sub { });
 plan skip_all => 'working sockets required for this test!'
     unless Mojo::IOLoop->acceptor($id)->handle->sockport;    # Test server
 
-# we need access to a test ldap server, set some environment variables for yours, e.g.
+# We need access to a test LDAP server, set some environment variables for
+# yours, e.g.
 # setenv MOJO_TEST_LDAP_HOST ldap.someplace.com
 # setenv MOJO_TEST_LDAP_BASEDN "dc=MYDOMAIN,dc=com"
 # setenv MOJO_TEST_LDAP_USERPASS user:pass
@@ -31,8 +32,8 @@ get '/ldap-auth' => sub {
     return $self->render(text => 'authorized')
         if $self->basic_auth(
             realm => {
-              # anonymous bind. on some less-standard ldap configs you might need
-              # more parameters, but this should usually work
+              # Anonymous bind. on some less-standard ldap configs you might
+              # need more parameters, but this should usually work
               host   => $ENV{MOJO_TEST_LDAP_HOST} || 'MISSINGLDAPSERVER',
               basedn => $ENV{MOJO_TEST_LDAP_BASEDN} || 'dc=MYDOMAIN,dc=com'
             }
@@ -74,7 +75,7 @@ $t->get_ok('/under-ldap-bridge', {Authorization => "Basic $encoded"}, 'bad crede
 # blank password
 $encoded = b("bad:")->b64_encode->to_string;
 chop $encoded;
-$t->get_ok('/ldap-auth', {Authorization => "Basic $encoded"},'blank password')
+$t->get_ok('/ldap-auth', {Authorization => "Basic $encoded"}, 'blank password')
   ->status_is(401)->content_is('denied');
 
 # Successes #

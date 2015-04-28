@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-BasicAuthPlus
 
+0.10 2015-04-27
+  - Return username in hash also for LDAP and other methods.
+
 0.09 2015-04-26
   - Fixed bug where basic_auth() wouldn't return username when called
     with hash args.

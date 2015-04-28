@@ -2,7 +2,7 @@ NAME
     Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 VERSION
-    Version 0.09
+    Version 0.10
 
 SYNOPSIS
       # Mojolicious::Lite

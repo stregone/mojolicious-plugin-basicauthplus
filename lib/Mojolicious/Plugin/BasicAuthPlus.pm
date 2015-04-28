@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Authen::Simple::LDAP;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 sub register {
     my ( $plugin, $app ) = @_;
@@ -43,8 +43,8 @@ sub register {
 
             # Verified via simple, passwd file, LDAP, or Active Directory.
             if ($auth) {
+                $data{username} = $params->{'username'};
                 if ( $params->{'username'} and $params->{'password'} ) {
-                    $data{username} = $params->{'username'};
                     return (\%data, 1)
                         if $plugin->_check_simple( $self, $auth, $params );
                 }
@@ -132,7 +132,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.09
+Version 0.10
 
 =head1 SYNOPSIS
 
