@@ -221,7 +221,7 @@ get '/passwd-file-with-hash' => sub {
             path => 'test.passwd'
         }
     );
-    return $self->render(text => 'authorized') if $auth_ok;
+    return $self->render(text => 'authorized for ' . ($hash_ref->{username}//'')) if $auth_ok;
 
     $self->render(text => 'denied');
 };
@@ -395,5 +395,5 @@ diag '/passwd-file-with-hash';
 $encoded = b("lord:nibbler")->b64_encode->to_string;
 chop $encoded;
 $t->get_ok('/passwd-file-with-hash', {Authorization => "Basic $encoded"})
-  ->status_is(200)->content_is('authorized');
+  ->status_is(200)->content_is('authorized for lord');
 
