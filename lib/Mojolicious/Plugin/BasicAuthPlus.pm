@@ -28,7 +28,7 @@ sub register {
                     and !$callback
                     and !$params;
             #split $auth into username and password (which may contain ":" )
-            my ($auth_username, $auth_password) = ($auth =~ /^([^:]+):(.*)/) and ($1, $2);
+            my ($auth_username, $auth_password) = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
             # Hash for return data
             my %data;
             $data{username} = $auth_username if $auth_username;
