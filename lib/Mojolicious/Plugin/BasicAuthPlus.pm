@@ -22,13 +22,17 @@ sub register {
             my ( $realm, $password, $username ) = $plugin->_expected_auth(@_);
             my $callback = $password if ref $password eq 'CODE';
             my $params   = $password if ref $password eq 'HASH';
+
             # No credentials entered
             return $plugin->_password_prompt( $self, $realm )
                 if !$auth
                     and !$callback
                     and !$params;
-            #split $auth into username and password (which may contain ":" )
-            my ($auth_username, $auth_password) = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
+
+            # Split $auth into username and password (which may contain ":" )
+            my ($auth_username, $auth_password)
+                = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
+
             # Hash for return data
             my %data;
             $data{username} = $auth_username if $auth_username;
