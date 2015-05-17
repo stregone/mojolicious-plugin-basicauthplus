@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Authen::Simple::LDAP;
 
-our $VERSION = '0.10';
+our $VERSION = '0.10.1';
 
 sub register {
     my ( $plugin, $app ) = @_;
@@ -18,20 +18,20 @@ sub register {
             # Sent credentials
             my $auth = $self->req->url->to_abs->userinfo || '';
 
-            # Required credentials
+            # Required credentials            
             my ( $realm, $password, $username ) = $plugin->_expected_auth(@_);
             my $callback = $password if ref $password eq 'CODE';
             my $params   = $password if ref $password eq 'HASH';
-
             # No credentials entered
             return $plugin->_password_prompt( $self, $realm )
                 if !$auth
                     and !$callback
                     and !$params;
-
+            #split $auth into username and password (which may contain ":" )
+            my ($auth_username, $auth_password) = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
             # Hash for return data
             my %data;
-            $data{username} = $username if $username;
+            $data{username} = $auth_username if $auth_username;
 
             # Verification within callback
             return (\%data, 1)
@@ -43,7 +43,6 @@ sub register {
 
             # Verified via simple, passwd file, LDAP, or Active Directory.
             if ($auth) {
-                $data{username} = $params->{'username'};
                 if ( $params->{'username'} and $params->{'password'} ) {
                     return (\%data, 1)
                         if $plugin->_check_simple( $self, $auth, $params );
