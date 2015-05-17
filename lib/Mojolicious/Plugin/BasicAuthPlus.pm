@@ -131,7 +131,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.10
+Version 0.10.1
 
 =head1 SYNOPSIS
 
@@ -414,6 +414,8 @@ In alphabetical order:
 G.Y. Park
 
 Jay Mortensen
+
+Nicolas Georges
 
 =back
 
