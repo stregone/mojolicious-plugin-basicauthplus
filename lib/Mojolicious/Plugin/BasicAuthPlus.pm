@@ -43,8 +43,10 @@ sub check_auth{
         if !$auth
         and !$callback
         and !$params;
-    #split $auth into username and password (which may contain ":" )
-    my ($auth_username, $auth_password) = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
+            # Split $auth into username and password (which may contain ":" )
+            my ($auth_username, $auth_password)
+                = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
+
     # Hash for return data
     my %data;
     $data{username} = $auth_username if $auth_username;
@@ -145,7 +147,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.10
+Version 0.10.2
 
 =head1 SYNOPSIS
 
@@ -435,6 +437,8 @@ In alphabetical order:
 G.Y. Park
 
 Jay Mortensen
+
+Nicolas Georges
 
 =back
 
