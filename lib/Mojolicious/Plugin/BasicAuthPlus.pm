@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Authen::Simple::LDAP;
 
-our $VERSION = '0.10.1';
+our $VERSION = '0.10.2';
 
 sub register {
     my ( $plugin, $app ) = @_;
@@ -17,50 +17,64 @@ sub register {
 
             # Sent credentials
             my $auth = $self->req->url->to_abs->userinfo || '';
-
-            # Required credentials            
-            my ( $realm, $password, $username ) = $plugin->_expected_auth(@_);
-            my $callback = $password if ref $password eq 'CODE';
-            my $params   = $password if ref $password eq 'HASH';
-            # No credentials entered
-            return $plugin->_password_prompt( $self, $realm )
-                if !$auth
-                    and !$callback
-                    and !$params;
-            #split $auth into username and password (which may contain ":" )
-            my ($auth_username, $auth_password) = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
-            # Hash for return data
-            my %data;
-            $data{username} = $auth_username if $auth_username;
-
-            # Verification within callback
-            return (\%data, 1)
-                if $callback and $callback->( split /:/, $auth, 2 );
-
-            # Verified with realm => username => password syntax
-            return (\%data, 1)
-                if $auth eq ( $username || '' ) . ":$password";
-
-            # Verified via simple, passwd file, LDAP, or Active Directory.
-            if ($auth) {
-                if ( $params->{'username'} and $params->{'password'} ) {
-                    return (\%data, 1)
-                        if $plugin->_check_simple( $self, $auth, $params );
-                }
-                elsif ( $params->{'path'} ) {
-                    return (\%data, 1)
-                        if $plugin->_check_passwd( $self, $auth, $params );
-                }
-                elsif ( $params->{'host'} ) {
-                    return (\%data, 1)
-                        if $plugin->_check_ldap( $self, $auth, $params );
-                }
+            
+            my ($hash_ref, $status) = $plugin->check_auth($self, $auth, @_);
+            if($status){
+                return ($hash_ref, $status);
             }
-
-            # Not verified
-            return $plugin->_password_prompt( $self, $realm );
+            else{
+                # Not verified
+                my $realm = $hash_ref->{realm};
+                return $plugin->_password_prompt( $self, $realm );
+            }
         }
     );
+}
+
+sub check_auth{
+    my ( $plugin, $c, $auth, @params ) = @_;
+
+    # Required credentials            
+    my ( $realm, $password, $username ) = $plugin->_expected_auth(@params);
+    my $callback = $password if ref $password eq 'CODE';
+    my $params   = $password if ref $password eq 'HASH';
+    # No credentials entered
+    return { realm => $realm }
+        if !$auth
+        and !$callback
+        and !$params;
+    #split $auth into username and password (which may contain ":" )
+    my ($auth_username, $auth_password) = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
+    # Hash for return data
+    my %data;
+    $data{username} = $auth_username if $auth_username;
+
+    # Verification within callback
+    return (\%data, 1)
+        if $callback and $callback->( split /:/, $auth, 2 );
+
+    # Verified with realm => username => password syntax
+    return (\%data, 1)
+        if $auth eq ( $username || '' ) . ":$password";
+
+    # Verified via simple, passwd file, LDAP, or Active Directory.
+    if ($auth) {
+        if ( $params->{'username'} and $params->{'password'} ) {
+            return (\%data, 1)
+                if $plugin->_check_simple( $c, $auth, $params );
+        }
+        elsif ( $params->{'path'} ) {
+            return (\%data, 1)
+                if $plugin->_check_passwd( $c, $auth, $params );
+        }
+        elsif ( $params->{'host'} ) {
+            return (\%data, 1)
+                if $plugin->_check_ldap( $c, $auth, $params );
+        }
+    }
+
+    # Not verified
+    return { realm => $realm };
 }
 
 sub _expected_auth {
@@ -211,6 +225,13 @@ You can ignore this; thus, for example, both of the following are valid:
               password => 'brannigan'
           }
       );
+
+=head2 C<check_auth>
+
+    my ($hash_ref, $status) = $plugin->check_auth($c, $auth, $params);
+
+Check authentication does the same thing than C<basic_auth> without asking
+for password if authentication failed.
 
 =head1 CONFIGURATION
 
