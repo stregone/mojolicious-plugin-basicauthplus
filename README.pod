@@ -4,7 +4,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.10.1
+Version 0.10.2
 
 =head1 SYNOPSIS
 
@@ -84,6 +84,13 @@ You can ignore this; thus, for example, both of the following are valid:
               password => 'brannigan'
           }
       );
+
+=head2 C<check_auth>
+
+Check authentication does the same thing than C<basic_auth> without asking
+for password if authentication failed.
+
+    my ($hash_ref, $status) = $plugin->check_auth($c, $auth, $params);
 
 =head1 CONFIGURATION
 

@@ -2,7 +2,7 @@ NAME
     Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 VERSION
-    Version 0.10.1
+    Version 0.10.2
 
 SYNOPSIS
       # Mojolicious::Lite
@@ -78,6 +78,14 @@ METHODS
                   password => 'brannigan'
               }
           );
+
+  "<check_auth"
+
+    Check authentication does the same thing than C<basic_auth> without asking
+    for password if authentication failed.
+
+      my ($hash_ref, $status) = $plugin->check_auth($c, $auth, $params);
+
 
 CONFIGURATION
     The basic_auth method takes an HTTP Basic Auth realm name that is either
