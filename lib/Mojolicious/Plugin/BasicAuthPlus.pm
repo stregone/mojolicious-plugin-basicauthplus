@@ -9,7 +9,7 @@ use Authen::Simple::LDAP;
 our $VERSION = '0.10.2';
 
 sub register {
-    my ( $plugin, $app ) = @_;
+    my ($plugin, $app) = @_;
 
     $app->renderer->add_helper(
         basic_auth => sub {
@@ -17,66 +17,60 @@ sub register {
 
             # Sent credentials
             my $auth = $self->req->url->to_abs->userinfo || '';
-            
+
             my ($hash_ref, $status) = $plugin->check_auth($self, $auth, @_);
-            if($status){
+            if ($status) {
                 return ($hash_ref, $status);
             }
-            else{
+            else {
                 # Not verified
                 my $realm = $hash_ref->{realm};
-                return $plugin->_password_prompt( $self, $realm );
+                return $plugin->_password_prompt($self, $realm);
             }
         }
     );
 }
 
-sub check_auth{
-    my ( $plugin, $c, $auth, @params ) = @_;
+sub check_auth {
+    my ($plugin, $c, $auth, @params) = @_;
 
-    # Required credentials            
-    my ( $realm, $password, $username ) = $plugin->_expected_auth(@params);
+    # Required credentials
+    my ($realm, $password, $username) = $plugin->_expected_auth(@params);
     my $callback = $password if ref $password eq 'CODE';
     my $params   = $password if ref $password eq 'HASH';
+
     # No credentials entered
-    return { realm => $realm }
-        if !$auth
-        and !$callback
-        and !$params;
-            # Split $auth into username and password (which may contain ":" )
-            my ($auth_username, $auth_password)
-                = ($1, $2) if $auth =~ /^([^:]+):(.*)/;
+    return {realm => $realm} if !$auth and !$callback and !$params;
+
+    # Split $auth into username and password (which may contain ":" )
+    my ($auth_username, $auth_password) = ($1, $2)
+        if $auth =~ /^([^:]+):(.*)/;
 
     # Hash for return data
     my %data;
     $data{username} = $auth_username if $auth_username;
 
     # Verification within callback
-    return (\%data, 1)
-        if $callback and $callback->( split /:/, $auth, 2 );
+    return (\%data, 1) if $callback and $callback->(split /:/, $auth, 2);
 
     # Verified with realm => username => password syntax
-    return (\%data, 1)
-        if $auth eq ( $username || '' ) . ":$password";
+    return (\%data, 1) if $auth eq ($username || '') . ":$password";
 
     # Verified via simple, passwd file, LDAP, or Active Directory.
     if ($auth) {
-        if ( $params->{'username'} and $params->{'password'} ) {
-            return (\%data, 1)
-                if $plugin->_check_simple( $c, $auth, $params );
+        if ($params->{'username'} and $params->{'password'}) {
+            return (\%data, 1) if $plugin->_check_simple($c, $auth, $params);
         }
-        elsif ( $params->{'path'} ) {
-            return (\%data, 1)
-                if $plugin->_check_passwd( $c, $auth, $params );
+        elsif ($params->{'path'}) {
+            return (\%data, 1) if $plugin->_check_passwd($c, $auth, $params);
         }
-        elsif ( $params->{'host'} ) {
-            return (\%data, 1)
-                if $plugin->_check_ldap( $c, $auth, $params );
+        elsif ($params->{'host'}) {
+            return (\%data, 1) if $plugin->_check_ldap($c, $auth, $params);
         }
     }
 
     # Not verified
-    return { realm => $realm };
+    return {realm => $realm};
 }
 
 sub _expected_auth {
@@ -90,7 +84,7 @@ sub _expected_auth {
 }
 
 sub _password_prompt {
-    my ( $self, $c, $realm ) = @_;
+    my ($self, $c, $realm) = @_;
 
     $c->res->headers->www_authenticate("Basic realm=\"$realm\"");
     $c->res->code(401);
@@ -100,41 +94,40 @@ sub _password_prompt {
 }
 
 sub _split_auth {
-    my ( $username, $password ) = split ':', $_[0];
+    my ($username, $password) = split ':', $_[0];
 
     $username = '' unless defined $username;
     $password = '' unless defined $password;
 
-    return ( $username, $password );
+    return ($username, $password);
 }
 
 sub _check_simple {
-    my ( $self, $c, $auth, $params ) = @_;
-    my ( $username, $password ) = _split_auth($auth);
+    my ($self, $c, $auth, $params) = @_;
+    my ($username, $password) = _split_auth($auth);
 
     return 1
         if $username eq $params->{'username'}
-            and Authen::Simple::Password->check( $password,
-                $params->{'password'} );
+        and Authen::Simple::Password->check($password, $params->{'password'});
 }
 
 sub _check_ldap {
-    my ( $self, $c, $auth, $params ) = @_;
-    my ( $username, $password ) = _split_auth($auth);
+    my ($self, $c, $auth, $params) = @_;
+    my ($username, $password) = _split_auth($auth);
 
     return 0 unless defined $password;
     my $ldap = Authen::Simple::LDAP->new(%$params);
 
-    return 1 if $ldap->authenticate( $username, $password );
+    return 1 if $ldap->authenticate($username, $password);
 }
 
 sub _check_passwd {
-    my ( $self, $c, $auth, $params ) = @_;
-    my ( $username, $password ) = _split_auth($auth);
+    my ($self, $c, $auth, $params) = @_;
+    my ($username, $password) = _split_auth($auth);
 
     my $passwd = Authen::Simple::Passwd->new(%$params);
 
-    return 1 if $passwd->authenticate( $username, $password );
+    return 1 if $passwd->authenticate($username, $password);
 }
 
 1;

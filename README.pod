@@ -87,8 +87,8 @@ You can ignore this; thus, for example, both of the following are valid:
 
 =head2 C<check_auth>
 
-Check authentication does the same thing than C<basic_auth> without asking
-for password if authentication failed.
+Check authentication does the same thing as C<basic_auth> without asking
+for a password if authentication failed.
 
     my ($hash_ref, $status) = $plugin->check_auth($c, $auth, $params);
 
