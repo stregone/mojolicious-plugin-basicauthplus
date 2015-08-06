@@ -1,5 +1,9 @@
 Revision history for Mojolicious-Plugin-BasicAuthPlus
 
+0.10.2 2015-08-05
+  - Uncouple validation and response/action of authentication (Nicolas
+    Georges)
+
 0.10.1 2015-05-17
   - Add a test for username in hash and a fix: always use $auth… (Nicolas
     Georges)
