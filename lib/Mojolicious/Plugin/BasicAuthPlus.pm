@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Net::LDAP;
 
-our $VERSION = '0.11.0';
+our $VERSION = '0.11.1';
 
 sub register {
     my ($plugin, $app) = @_;
@@ -248,7 +248,7 @@ Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.11.0
+Version 0.11.1
 
 =head1 SYNOPSIS
 
