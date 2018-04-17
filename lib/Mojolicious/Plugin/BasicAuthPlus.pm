@@ -658,15 +658,15 @@ Brad Robertson <blr@cpan.org>
 
 =head1 CONTRIBUTORS
 
-In alphabetical order:
-
 =over 2
 
-G.Y. Park
+Nicolas Georges
 
 Jay Mortensen
 
-Nicolas Georges
+Mark Muldoon
+
+G.Y. Park
 
 =back
 
