@@ -139,28 +139,29 @@ sub _check_ldap {
     my $socket_type = ref $ldap->{net_ldap_socket};
     $c->app->log->warn("LDAP socket type: $socket_type") if $logging;
 
-    unless (defined($params->{start_tls}) && $params->{start_tls} == 0) {
-        if ($socket_type ne 'IO::Socket::SSL') {
-            my $dse = $ldap->root_dse();
-            my $has_tls = $dse->supported_extension('1.3.6.1.4.1.1466.20037');
+    unless (($socket_type eq 'IO::Socket::SSL')
+        || (defined($params->{start_tls}) && $params->{start_tls} == 0))
+    {
+        my $dse     = $ldap->root_dse();
+        my $has_tls = $dse->supported_extension('1.3.6.1.4.1.1466.20037');
 
-            if ($has_tls) {
-                my $mesg = $ldap->start_tls(
-                    verify  => $params->{tls_verify} // 'optional',
-                    cafile  => $params->{cafile} // '',
-                );
-                if ($mesg->code) {
-                	my $text = "start_tls() failed for $params->{host}. " .
-                		"[$mesg->code] $mesg->error_name: $mesg->error_text" ;
-                    $c->app->log->warn( $text ) if $logging;
-                    $ldap->unbind;
-                    return 0;
-                }
+        if ($has_tls) {
+            my $mesg = $ldap->start_tls(
+                verify => $params->{tls_verify} // 'optional',
+                cafile => $params->{cafile}     // '',
+            );
+            if ($mesg->code) {
+                my $text = "start_tls() failed for $params->{host}. "
+                    . "[$mesg->code] $mesg->error_name: $mesg->error_text";
+                $c->app->log->warn($text) if $logging;
+                $ldap->unbind;
+                return 0;
             }
-
-            $socket_type = ref $ldap->{net_ldap_socket};
-            $c->app->log->warn("LDAP socket type after start_tls(): $socket_type") if $logging;
         }
+
+        $socket_type = ref $ldap->{net_ldap_socket};
+        $c->app->log->warn("LDAP socket type after start_tls(): $socket_type")
+            if $logging;
     }
 
     my @credentials
