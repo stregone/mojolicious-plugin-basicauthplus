@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'Mojolicious::Plugin::BasicAuthPlus',
-    AUTHOR              => q{Brad Robertson <blr@cpan.org>},
+    AUTHOR              => q{Brad Robertson <bradrobertson3@gmail.com>},
     VERSION_FROM        => 'lib/Mojolicious/Plugin/BasicAuthPlus.pm',
     ABSTRACT_FROM       => 'lib/Mojolicious/Plugin/BasicAuthPlus.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002

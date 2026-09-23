@@ -412,7 +412,7 @@ Based on Mojolicious::Plugin::BasicAuth, by Glen Hinkle <tempire@cpan.org>.
 
 =head1 AUTHOR
 
-Brad Robertson <blr@cpan.org>
+Brad Robertson <bradrobertson3@gmail.com>
 
 =head1 CONTRIBUTORS
 
