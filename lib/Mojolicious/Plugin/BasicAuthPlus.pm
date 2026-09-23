@@ -6,7 +6,7 @@ use Authen::Simple::Password;
 use Authen::Simple::Passwd;
 use Net::LDAP;
 
-our $VERSION = '0.11.3';
+our $VERSION = '1.0';
 
 sub register {
     my ($plugin, $app) = @_;
@@ -262,13 +262,15 @@ sub _check_passwd {
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Mojolicious::Plugin::BasicAuthPlus - Basic HTTP Auth Helper Plus
 
 =head1 VERSION
 
-Version 0.11.3
+Version 1.0
 
 =head1 SYNOPSIS
 
@@ -690,6 +692,8 @@ G.Y. Park
 
 Jan Paul Schmidt
 
+José Joaquín Atria
+
 =back
 
 =head1 SEE ALSO
@@ -699,7 +703,7 @@ L<Authen::Simple::Password>, L<Authen::Simple::Passwd>, L<Net::LDAP>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2013-2018 by Brad Robertson.
+Copyright (c) 2013-2026 by Brad Robertson.
 
 =head1 LICENSE
 
