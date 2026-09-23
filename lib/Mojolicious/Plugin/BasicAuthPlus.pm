@@ -155,9 +155,15 @@ sub _check_ldap {
                 cafile => $params->{cafile} // '',
             );
             if ($mesg->is_error) {
-                my $text = "start_tls() failed for $params->{host}. "
-                    . "[$mesg->code] $mesg->error_name: $mesg->error_text";
-                $c->app->log->warn($text) if $logging;
+                if ($logging) {
+                    my $text = sprintf 'start_tls() failed for %s [%s] %s: %s',
+                        $params->{host},
+                        $mesg->code,
+                        $mesg->error_name,
+                        $mesg->error_text;
+
+                    $c->app->log->warn($text);
+                }
                 $ldap->unbind;
                 return 0;
             }
